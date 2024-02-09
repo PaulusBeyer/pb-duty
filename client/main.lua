@@ -27,6 +27,16 @@ end)
 function InitiateZones()
     for k, v in pairs(Config.Duty) do
         if v.name ~= false and v.coords ~= nil then
+            
+Citizen.CreateThread(
+    function()
+        while true do
+            Citizen.Wait(1)
+            for i = 1, #Config.Duty, 1 do
+                DrawMarker(v.marker, v.coords.x, v.coords.y, v.coords.z+1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, v.scale, v.scale, v.scale, v.RGB[1], v.RGB[2], v.RGB[3], v.alpha, false, true, 2, nil, nil, false)
+            end
+        end
+    end)
             local dloc = vec3(v.coords.x, v.coords.y, v.coords.z)
             DutyZones[#DutyZones..k] = BoxZone:Create(dloc, 1.0, 1.0, {
                 name = v.name..k..'coords',
@@ -34,7 +44,7 @@ function InitiateZones()
                 heading = v.coords.w,
                 debugPoly = Config.Debug
             })
-
+            
             DutyZones[#DutyZones..k]:onPlayerInOut(function(isPointInside)
                 isInEnterZone = isPointInside
                 if isPointInside then
